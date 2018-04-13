@@ -1,21 +1,32 @@
+$( document ).ready(function() {
+    D3Heatmap();
+
+
+    $('.js-svgHeatmap__dropdown').change(function(){
+        console.log('in select');
+    });
+});
+
 var usCities = '/Users/erinblack/Desktop/d3-us-map/us-cities.csv';
 var usMap = '/Users/erinblack/Desktop/d3-us-map/us-states.json';
 
 var D3Heatmap = function(){
-     var q = d3.queue();
+    var q = d3.queue();
       q.defer(d3.json, usMap)
       q.defer(d3.csv, usCities)
       q.await(analyze);
+
     function analyze(error, usStates, cities){
         appendSelect(error, usStates, cities);
     }
 };
 
+// Appending the Select Options to the DOM
 var appendSelect = function(error, usStates, cities){
     var select = d3.select('.c-svgHeatmap__selectSection')
         .append('select')
-        .attr('class', 'c-svgHeatmap__dropdown')
-        .on('change', onchange);
+        .attr('class', 'c-svgHeatmap__dropdown js-svgHeatmap__dropdown')
+        .on('change', citySelected);
 
     var options = select
         .selectAll('option')
@@ -29,7 +40,6 @@ var appendSelect = function(error, usStates, cities){
 };
 
 var appendMap = function(error, usStates, cities){
-    console.log('in append map');
     var margin = {top: 50, left: 50, right: 50, bottom:50},
      height = 400 - margin.top - margin.bottom,
      width = 800 - margin.left - margin.right;
@@ -48,7 +58,6 @@ var appendMap = function(error, usStates, cities){
      .append('g')
      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
     var states = topojson.feature(usStates, usStates.objects.states).features;
-    console.log('in appendMap');
     // Appending the US States to the DOM
     svg.selectAll('.c-svgHeatmap__state')
         .data(states)
@@ -69,7 +78,7 @@ var appendMap = function(error, usStates, cities){
         .attr('cy', function(d){
             var coords = projection([d.lng, d.lat]);
             return coords[1];
-        })
+        });
 
     svg.selectAll('.c-svgHeatmap__cityLabel')
         .data(cities)
@@ -84,15 +93,40 @@ var appendMap = function(error, usStates, cities){
             return coords[1];
         })
         .text(function(d){
-            console.log('d', d);
-            return  d.city ;
+            return  d.city;
         })
         .attr('dx', 5)
-        .attr('dy', 4)
-        }
+        .attr('dy', 4);
+    };
 
 
 
-$( document ).ready(function() {
-    D3Heatmap();
-});
+function citySelected (d){
+    console.log('in citySelected with', d);
+    // var zoomSettings = {
+    //     duration: 1000,
+    //     ease: d3.easeCubicOut,
+    //     zoomlLevel: 5
+    // };
+    // var x;
+    // var y;
+    // var zoomLevel;
+    //
+    // if(d && centered !== d){
+    //     var centroid = path.centroid(d);
+    //     x = centroid[0];
+    //     y = centroid[1];
+    //     zoomLevel = zoomSettings.zoomLevel;
+    //     centered = d;
+    // } else {
+    //     x = width / 2;
+    //     y = height / 2;
+    //     zoomLevel = 1;
+    //     centered = null;
+    // }
+    //
+    // g.transition()
+    //     .duration(zoomSettings.duration)
+    //     .ease(zoomSettings.ease)
+    //     .attr('transform', 'translate(' + width / 2 + ', ' +height / 2 + ')scale(' + zoomLevel + ')translate(' + -x + ',' + -y +')');
+}
