@@ -53,7 +53,25 @@ var D3Heatmap = function(){
                 var coords = projection([d.lng, d.lat]);
                 return coords[1];
             })
-    }
+
+        svg.selectAll('.c-svgHeatmap__cityLabel')
+            .data(cities)
+            .enter().append('text')
+            .attr('class', 'c-svgHeatmap__cityLabel')
+            .attr('x', function(d){
+                var coords = projection([d.lng, d.lat]);
+                return coords[0];
+            })
+            .attr('y', function(d){
+                var coords = projection([d.lng, d.lat]);
+                return coords[1];
+            })
+            .text(function(d){
+                return d.city;
+            })
+            .attr('dx', 5)
+            .attr('dy', 4)
+            }
 
 };
 

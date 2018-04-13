@@ -3,3 +3,7 @@
     stroke: darkgray;
     stroke-width: 1
 }
+
+.c-svgHeatmap__cityLabel {
+    font-size: 10px;
+}
