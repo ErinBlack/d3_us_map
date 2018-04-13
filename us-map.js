@@ -22,7 +22,8 @@ var appendSelect = function(error, usStates, cities){
         .data(cities).enter()
         .append('option')
         .text(function(d){
-            return d.city;
+            var cityState = d.city + ', ' + d.state_id;
+            return cityState;
         });
     appendMap(error, usStates, cities);
 };
@@ -83,7 +84,8 @@ var appendMap = function(error, usStates, cities){
             return coords[1];
         })
         .text(function(d){
-            return d.city;
+            console.log('d', d);
+            return  d.city ;
         })
         .attr('dx', 5)
         .attr('dy', 4)
